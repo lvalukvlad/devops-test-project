@@ -36,3 +36,28 @@ export DB_PASSWORD=secret
 
 # Запустить приложение
 python app/app.py
+```
+
+## Docker
+
+```bash
+cp .env.example .env
+docker compose up -d --build
+```
+
+http://localhost/health — база ответила, в json будет connected.  
+http://localhost/data — пишет строку в таблицу. Каждый заход добавляет ещё одну.
+
+В `.env` хост базы это `db`. Так приложение попадает в контейнер Postgres.
+
+```bash
+docker compose down
+docker compose up -d
+curl http://localhost/data
+```
+
+`total_records` станет больше: старые строки лежат в volume и не стираются. `down -v` как раз стирает, для этой проверки не нужен.
+
+Процесс в контейнере `web` идёт от пользователя `appuser`, не от root.
+
+
